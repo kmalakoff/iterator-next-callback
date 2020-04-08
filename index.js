@@ -17,7 +17,10 @@ module.exports = function iteratorNextCallback(iterator) {
   }
   return function nextIteratorCallback(callback) {
     var result = iterator.next(callback);
-    if (isPromise(result))
+    if (!result) return; // callback based callback
+
+    // async iterator
+    if (isPromise(result)) {
       result
         .then(function (result) {
           callback(null, result);
@@ -25,5 +28,10 @@ module.exports = function iteratorNextCallback(iterator) {
         .catch(function (err) {
           callback(err);
         });
+    }
+    // synchronous iterator
+    else {
+      callback(null, result.value);
+    }
   };
 };

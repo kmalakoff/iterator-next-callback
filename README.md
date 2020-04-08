@@ -1,14 +1,23 @@
-## join-deep
+## iterator-next-callback
 
-Deep join an array.
+Calls async iterator next using a callback format.
 
 ```
-var joinDeep = require('join-deep');
+var next = require('iterator-next-callback');
 var assert = require('assert');
 
-var array1 = [1, [2, [3, [4]], 5]];
-assert.deepStrictEqual(joinDeep(array1, ', '), '1, 2, 3, 4, 5');
+async function* createAsyncIterable(iterable) {
+  for (const elem of iterable) {
+    yield elem;
+  }
+}
 
-var array2 = [[], [[]], [[], [[[]]]]];
-assert.deepStrictEqual(joinDeep(array2, ', '), '');
+var iterator = createAsyncIterable([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+var callback = nextCallback(iterator);
+
+callback(function (err, value) {
+  assert.ok(!err);
+  assert.equal(value, 1);
+});
+
 ```
