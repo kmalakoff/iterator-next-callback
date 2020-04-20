@@ -1,6 +1,6 @@
 {
   "name": "iterator-next-callback",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Calls async iterator next using a callback format",
   "main": "index.js",
   "engines": {
@@ -25,7 +25,9 @@
   "author": "Kevin Malakoff <kmalakoff@gmail.com> (https://github.com/kmalakoff)",
   "license": "MIT",
   "homepage": "https://github.com/kmalakoff/reduce-deep",
-  "dependencies": {},
+  "dependencies": {
+    "is-promise": "^2.1.0"
+  },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",

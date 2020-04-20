@@ -1,4 +1,4 @@
-var isPromise = require('./lib/isPromise');
+var isPromise = require('is-promise');
 
 var HAS_ASYNC_ITERATOR = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
 
