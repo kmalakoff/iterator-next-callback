@@ -20,14 +20,14 @@ Iterator.prototype[Symbol.asyncIterator] = function () {
 describe('asyncIterator', function () {
   it('it should add a callback interface', function (done) {
     var iterator = new Iterator([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    var callback = nextCallback(iterator);
+    var iteratorCallback = nextCallback(iterator);
 
     iterator[Symbol.asyncIterator]()
       .next()
       .then(function (result) {
         assert.equal(result.value, 1);
 
-        callback(function (err1, value1) {
+        iteratorCallback(function (err1, value1) {
           assert.ok(!err1);
           assert.equal(value1, 2);
           done();
@@ -41,12 +41,12 @@ describe('asyncIterator', function () {
   it('it should add a callback interface with synchronous built-ins', function (done) {
     var iterable = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     var iterator = iterable[Symbol.iterator]();
-    var callback = nextCallback(iterator);
+    var iteratorCallback = nextCallback(iterator);
 
     var result = iterator.next();
     assert.equal(result.value, 1);
 
-    callback(function (err1, value1) {
+    iteratorCallback(function (err1, value1) {
       assert.ok(!err1);
       assert.equal(value1, 2);
       done();
@@ -61,14 +61,14 @@ describe('asyncIterator', function () {
     }
 
     var iterator = createAsyncIterable([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    var callback = nextCallback(iterator);
+    var iteratorCallback = nextCallback(iterator);
 
     iterator
       .next()
       .then(function (result) {
         assert.equal(result.value, 1);
 
-        callback(function (err1, value1) {
+        iteratorCallback(function (err1, value1) {
           assert.ok(!err1);
           assert.equal(value1, 2);
           done();
