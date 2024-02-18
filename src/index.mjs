@@ -1,31 +1,31 @@
-var isPromise = require('is-promise');
+import isPromise from 'is-promise';
 
-var HAS_ASYNC_ITERATOR = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
+const HAS_ASYNC_ITERATOR = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
 
-module.exports = function iteratorNextCallback(iterator) {
+export default function iteratorNextCallback(iterator) {
   if (HAS_ASYNC_ITERATOR && iterator[Symbol.asyncIterator]) {
     return function nextAsyncIterator(callback) {
       iterator[Symbol.asyncIterator]()
         .next()
-        .then(function (result) {
+        .then((result) => {
           callback(null, result.done ? null : result.value);
         })
-        .catch(function (err) {
+        .catch((err) => {
           callback(err);
         });
     };
   }
   return function nextIteratorCallback(callback) {
-    var result = iterator.next(callback);
+    const result = iterator.next(callback);
     if (!result) return; // callback based callback
 
     // async iterator
     if (isPromise(result)) {
       result
-        .then(function (result) {
+        .then((result) => {
           callback(null, result);
         })
-        .catch(function (err) {
+        .catch((err) => {
           callback(err);
         });
     }
@@ -34,4 +34,4 @@ module.exports = function iteratorNextCallback(iterator) {
       callback(null, result.value);
     }
   };
-};
+}
