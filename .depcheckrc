@@ -1,1 +1,1 @@
-ignores: ["depcheck"]
+ignores: ["iterator-next-callback", "depcheck", "ts-dev-stack", "@types/*"]
