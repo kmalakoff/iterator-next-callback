@@ -14,9 +14,8 @@ function _interop_require_default(obj) {
         default: obj
     };
 }
-var HAS_ASYNC_ITERATOR = typeof Symbol !== "undefined" && Symbol.asyncIterator;
 function iteratorNextCallback(iterator) {
-    if (HAS_ASYNC_ITERATOR && iterator[Symbol.asyncIterator]) {
+    if (typeof Symbol !== 'undefined' && Symbol.asyncIterator && iterator[Symbol.asyncIterator]) {
         return function nextAsyncIterator(callback) {
             iterator[Symbol.asyncIterator]().next().then(function(result) {
                 callback(null, result.done ? null : result.value);
@@ -40,4 +39,4 @@ function iteratorNextCallback(iterator) {
         }
     };
 }
-/* CJS INTEROP */ if (exports.__esModule && exports.default) { module.exports = exports.default; for (var key in exports) module.exports[key] = exports[key]; }
+/* CJS INTEROP */ if (exports.__esModule && exports.default) { Object.defineProperty(exports.default, '__esModule', { value: true }); for (var key in exports) exports.default[key] = exports[key]; module.exports = exports.default; }

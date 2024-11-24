@@ -1,8 +1,6 @@
 const assert = require('assert');
 const nextCallback = require('iterator-next-callback');
 
-const HAS_ASYNC_ITERATOR = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
-
 function Iterator(values) {
   this.values = values;
 }
@@ -20,7 +18,7 @@ Iterator.prototype[Symbol.asyncIterator] = function () {
 };
 
 describe('asyncIterator', () => {
-  if (!HAS_ASYNC_ITERATOR) return;
+  if (typeof Symbol === 'undefined' || !Symbol.asyncIterator) return;
 
   it('it should add a callback interface', (done) => {
     const iterator = new Iterator([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
