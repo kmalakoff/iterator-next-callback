@@ -30,7 +30,7 @@ describe('promise', () => {
         });
       })
       .catch((err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
       });
   });
 });
