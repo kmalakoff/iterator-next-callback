@@ -16,7 +16,7 @@ var iterator = createAsyncIterable([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 var callback = nextCallback(iterator);
 
 callback(function (err, value) {
-  assert.ok(!err);
+  assert.ok(!err, err ? err.message : '');
   assert.equal(value, 1);
 });
 
