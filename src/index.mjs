@@ -1,9 +1,7 @@
 import isPromise from 'is-promise';
 
-const HAS_ASYNC_ITERATOR = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
-
 export default function iteratorNextCallback(iterator) {
-  if (HAS_ASYNC_ITERATOR && iterator[Symbol.asyncIterator]) {
+  if (typeof Symbol !== 'undefined' && Symbol.asyncIterator && iterator[Symbol.asyncIterator]) {
     return function nextAsyncIterator(callback) {
       iterator[Symbol.asyncIterator]()
         .next()
