@@ -1,5 +1,7 @@
-const assert = require('assert');
-const nextCallback = require('iterator-next-callback');
+import assert from 'assert';
+
+// @ts-ignore
+import nextCallback from 'iterator-next-callback';
 
 function Iterator(values) {
   this.values = values;
@@ -15,7 +17,7 @@ describe('callback', () => {
     const iteratorCallback = nextCallback(iterator);
 
     iterator.next((err, value) => {
-      assert.ok(!err);
+      assert.ok(!err, err ? err.message : '');
       assert.equal(value, 1);
 
       iteratorCallback((err1, value1) => {

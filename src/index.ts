@@ -1,9 +1,10 @@
 import isPromise from 'is-promise';
 
-const HAS_ASYNC_ITERATOR = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
+import type { CallbackIterator, CallbackIteratorCallback, TNext } from './types';
 
-export default function iteratorNextCallback(iterator) {
-  if (HAS_ASYNC_ITERATOR && iterator[Symbol.asyncIterator]) {
+export * from './types';
+export default function iteratorNextCallback<T>(iterator: AsyncIterable<T> | CallbackIterator<T>) {
+  if (typeof Symbol !== 'undefined' && Symbol.asyncIterator && iterator[Symbol.asyncIterator]) {
     return function nextAsyncIterator(callback) {
       iterator[Symbol.asyncIterator]()
         .next()
@@ -15,13 +16,13 @@ export default function iteratorNextCallback(iterator) {
         });
     };
   }
-  return function nextIteratorCallback(callback) {
-    const result = iterator.next(callback);
+  return function next(callback?: CallbackIteratorCallback<T>): Promise<T> | undefined {
+    const result = (iterator as CallbackIterator<T>).next(callback);
     if (!result) return; // callback based callback
 
     // async iterator
     if (isPromise(result)) {
-      result
+      (result as Promise<T>)
         .then((result) => {
           callback(null, result);
         })
@@ -31,7 +32,7 @@ export default function iteratorNextCallback(iterator) {
     }
     // synchronous iterator
     else {
-      callback(null, result.value);
+      callback(null, (result as TNext<T>).value);
     }
   };
 }

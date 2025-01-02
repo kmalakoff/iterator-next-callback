@@ -1,7 +1,10 @@
-const assert = require('assert');
-const nextCallback = require('iterator-next-callback');
+import assert from 'assert';
+import Pinkie from 'pinkie-promise';
 
-const HAS_ASYNC_ITERATOR = typeof Symbol !== 'undefined' && Symbol.asyncIterator;
+// @ts-ignore
+import nextCallback from 'iterator-next-callback';
+// @ts-ignore
+import type { CallbackIterator } from 'iterator-next-callback';
 
 function Iterator(values) {
   this.values = values;
@@ -20,7 +23,19 @@ Iterator.prototype[Symbol.asyncIterator] = function () {
 };
 
 describe('asyncIterator', () => {
-  if (!HAS_ASYNC_ITERATOR) return;
+  if (typeof Symbol === 'undefined' || !Symbol.asyncIterator) return;
+  (() => {
+    // patch and restore promise
+    // @ts-ignore
+    let rootPromise: Promise;
+    before(() => {
+      rootPromise = global.Promise;
+      global.Promise = Pinkie;
+    });
+    after(() => {
+      global.Promise = rootPromise;
+    });
+  })();
 
   it('it should add a callback interface', (done) => {
     const iterator = new Iterator([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -38,14 +53,14 @@ describe('asyncIterator', () => {
         });
       })
       .catch((err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
       });
   });
 
   it('it should add a callback interface with synchronous built-ins', (done) => {
     const iterable = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const iterator = iterable[Symbol.iterator]();
-    const iteratorCallback = nextCallback(iterator);
+    const iteratorCallback = nextCallback<number>(iterator as unknown as CallbackIterator<number>);
 
     const result = iterator.next();
     assert.equal(result.value, 1);
@@ -79,7 +94,7 @@ describe('asyncIterator', () => {
         });
       })
       .catch((err) => {
-        assert.ok(!err);
+        assert.ok(!err, err ? err.message : '');
       });
   });
 });
