@@ -53,7 +53,7 @@ describe('asyncIterator', () => {
         });
       })
       .catch((err) => {
-        assert.ok(!err, err ? err.message : '');
+        if (err) return done(err);
       });
   });
 
@@ -94,7 +94,7 @@ describe('asyncIterator', () => {
         });
       })
       .catch((err) => {
-        assert.ok(!err, err ? err.message : '');
+        if (err) return done(err);
       });
   });
 });
