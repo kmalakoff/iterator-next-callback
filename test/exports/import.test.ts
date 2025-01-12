@@ -16,7 +16,7 @@ describe('exports .ts', () => {
     const iteratorCallback = nextCallback(iterator);
 
     iterator.next((err, value) => {
-      assert.ok(!err, err ? err.message : '');
+      if (err) return done(err);
       assert.equal(value, 1);
 
       iteratorCallback((err1, value1) => {
