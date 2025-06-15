@@ -15,7 +15,10 @@ describe('exports .mjs', () => {
     const iteratorCallback = nextCallback(iterator);
 
     iterator.next((err, value) => {
-      if (err) return done(err.message);
+      if (err) {
+        done(err.message);
+        return;
+      }
       assert.equal(value, 1);
 
       iteratorCallback((err1, value1) => {

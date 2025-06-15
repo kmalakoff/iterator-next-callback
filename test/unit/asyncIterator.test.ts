@@ -53,7 +53,10 @@ describe('asyncIterator', () => {
         });
       })
       .catch((err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
       });
   });
 
@@ -94,7 +97,10 @@ describe('asyncIterator', () => {
         });
       })
       .catch((err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
       });
   });
 });

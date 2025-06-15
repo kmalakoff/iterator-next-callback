@@ -44,7 +44,10 @@ describe('promise', () => {
         });
       })
       .catch((err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
       });
   });
 });
