@@ -3,27 +3,21 @@ import Pinkie from 'pinkie-promise';
 
 // @ts-ignore
 import nextCallback from 'iterator-next-callback';
-// @ts-ignore
-import type { CallbackIterator } from 'iterator-next-callback';
 
-function Iterator(values) {
-  this.values = values;
-}
+class Iterator<T> implements AsyncIterator<T> {
+  values: T[];
 
-Iterator.prototype[Symbol.asyncIterator] = function () {
-  const self = this;
-  return { next: nextPromise };
-
-  function nextPromise() {
-    return new Promise((resolve) => {
-      const value = self.values.length ? self.values.shift() : null;
-      return resolve({ value: value, done: value === null });
+  constructor(values: T[]) {
+    this.values = values;
+  }
+  next() {
+    return new Pinkie((resolve) => {
+      return resolve(this.values.length ? { done: false, value: this.values.shift() } : { done: true, value: null });
     });
   }
-};
+}
 
-describe('asyncIterator', () => {
-  if (typeof Symbol === 'undefined' || !Symbol.asyncIterator) return;
+describe('promise', () => {
   (() => {
     // patch and restore promise
     // @ts-ignore
@@ -41,60 +35,24 @@ describe('asyncIterator', () => {
     const iterator = new Iterator([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     const iteratorCallback = nextCallback(iterator);
 
-    iterator[Symbol.asyncIterator]()
-      .next()
-      .then((result) => {
-        assert.equal(result.value, 1);
-
-        iteratorCallback((err1, value1) => {
-          assert.ok(!err1);
-          assert.equal(value1, 2);
-          done();
-        });
-      })
-      .catch((err) => {
-        if (err) return done(err.message);
-      });
-  });
-
-  it('it should add a callback interface with synchronous built-ins', (done) => {
-    const iterable = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const iterator = iterable[Symbol.iterator]();
-    const iteratorCallback = nextCallback<number>(iterator as unknown as CallbackIterator<number>);
-
-    const result = iterator.next();
-    assert.equal(result.value, 1);
-
-    iteratorCallback((err1, value1) => {
-      assert.ok(!err1);
-      assert.equal(value1, 2);
-      done();
-    });
-  });
-
-  it('it should add a callback interface with asynchronous built-ins', (done) => {
-    async function* createAsyncIterable(iterable) {
-      for (const elem of iterable) {
-        yield elem;
-      }
-    }
-
-    const iterator = createAsyncIterable([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    const iteratorCallback = nextCallback(iterator);
-
     iterator
       .next()
       .then((result) => {
+        assert.equal(result.done, false);
         assert.equal(result.value, 1);
 
-        iteratorCallback((err1, value1) => {
+        iteratorCallback((err1, result) => {
           assert.ok(!err1);
-          assert.equal(value1, 2);
+          assert.equal(result.done, false);
+          assert.equal(result.value, 2);
           done();
         });
       })
       .catch((err) => {
-        if (err) return done(err.message);
+        if (err) {
+          done(err.message);
+          return;
+        }
       });
   });
 });

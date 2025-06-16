@@ -1,26 +1,32 @@
 import assert from 'assert';
+import Pinkie from 'pinkie-promise';
+
 import nextCallback from 'iterator-next-callback';
 
-function Iterator(values) {
-  this.values = values;
+class Iterator {
+  constructor(values) {
+    this.values = values;
+  }
+  next() {
+    return new Pinkie((resolve) => {
+      return resolve(this.values.length ? { done: false, value: this.values.shift() } : { done: true, value: null });
+    });
+  }
 }
-
-Iterator.prototype.next = function (callback) {
-  callback(null, this.values.length ? this.values.shift() : null);
-};
 
 describe('exports .mjs', () => {
   it('it should add a callback interface', (done) => {
     const iterator = new Iterator([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     const iteratorCallback = nextCallback(iterator);
 
-    iterator.next((err, value) => {
-      if (err) return done(err.message);
-      assert.equal(value, 1);
+    iterator.next().then((result) => {
+      assert.equal(result.done, false);
+      assert.equal(result.value, 1);
 
-      iteratorCallback((err1, value1) => {
+      iteratorCallback((err1, result) => {
         assert.ok(!err1);
-        assert.equal(value1, 2);
+        assert.equal(result.done, false);
+        assert.equal(result.value, 2);
         done();
       });
     });
