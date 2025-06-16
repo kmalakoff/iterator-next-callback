@@ -1,10 +1,2 @@
-export interface TNext<T> {
-  value: T;
-}
-
-export type CallbackIteratorCallback<T> = (error?: Error, value?: T) => void;
-export type CallbackIteratorNext<T> = (callback?: CallbackIteratorCallback<T>) => undefined;
-
-export interface CallbackIterator<T> {
-  next(callback?: CallbackIteratorCallback<T>): undefined;
-}
+export type Callback<T, TReturn = unknown> = (error?: Error, result?: IteratorResult<T, TReturn>) => void;
+export type IteratorCallback<T> = (callback?: Callback<T>) => undefined;
