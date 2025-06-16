@@ -1,41 +1,34 @@
 import isPromise from 'is-promise';
-
-import type { CallbackIterator, CallbackIteratorCallback, CallbackIteratorNext, TNext } from './types.js';
+import type { Callback, IteratorCallback } from './types.js';
 
 export * from './types.js';
 
-export default function iteratorNextCallback<T>(iterator: AsyncIterable<T>): undefined;
-export default function iteratorNextCallback<T>(iterator: CallbackIterator<T>): undefined;
-export default function iteratorNextCallback<T>(iterator: AsyncIterable<T> | CallbackIterator<T>): CallbackIteratorNext<T> | undefined {
+export default function iteratorNextCallback<T, TReturn = unknown, TNext = unknown>(iterator: AsyncIterator<T, TReturn, TNext> | AsyncIterable<T, TReturn, TNext> | AsyncIterableIterator<T, TReturn, TNext>): IteratorCallback<T> {
   if (typeof Symbol !== 'undefined' && Symbol.asyncIterator && iterator[Symbol.asyncIterator]) {
-    return function nextAsyncIterator(callback: CallbackIteratorCallback<T>): undefined {
+    return function nextAsyncIterable(callback: Callback<T>): undefined {
       iterator[Symbol.asyncIterator]()
         .next()
-        .then((result) => {
-          callback(null, result.done ? null : result.value);
-        })
-        .catch((err) => {
-          callback(err);
-        });
-    };
-  }
-  return function next(callback?: CallbackIteratorCallback<T>): undefined {
-    const result = (iterator as CallbackIterator<T>).next(callback);
-    if (!result) return; // callback based callback
-
-    // async iterator
-    if (isPromise(result)) {
-      (result as Promise<T>)
         .then((result) => {
           callback(null, result);
         })
         .catch((err) => {
           callback(err);
         });
-    }
-    // synchronous iterator
-    else {
-      callback(null, (result as TNext<T>).value);
+    };
+  }
+
+  return function AsyncIterator(callback: Callback<T>): undefined {
+    const result = (iterator as AsyncIterator<T, TReturn>).next();
+    if (isPromise(result)) {
+      result
+        .then((result) => {
+          callback(null, result);
+        })
+        .catch((err) => {
+          callback(err);
+        });
+    } else {
+      callback(null, result);
     }
   };
 }
