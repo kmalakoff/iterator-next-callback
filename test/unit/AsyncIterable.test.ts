@@ -1,8 +1,7 @@
 import assert from 'assert';
-import Pinkie from 'pinkie-promise';
-
 // @ts-ignore
 import nextCallback from 'iterator-next-callback';
+import Pinkie from 'pinkie-promise';
 
 class Iterator<T> implements AsyncIterable<T> {
   values: T[];
