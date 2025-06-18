@@ -1,7 +1,6 @@
 import assert from 'assert';
-import Pinkie from 'pinkie-promise';
-
 import nextCallback from 'iterator-next-callback';
+import Pinkie from 'pinkie-promise';
 
 class Iterator {
   constructor(values) {
