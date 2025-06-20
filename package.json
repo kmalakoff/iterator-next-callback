@@ -1,6 +1,6 @@
 {
   "name": "iterator-next-callback",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Calls async iterator next using a callback format",
   "keywords": [
     "iterator",
