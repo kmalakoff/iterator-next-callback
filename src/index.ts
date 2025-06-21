@@ -1,7 +1,7 @@
 import isPromise from 'is-promise';
-import type { Callback, IteratorCallback } from './types.js';
+import type { Callback, IteratorCallback } from './types.ts';
 
-export * from './types.js';
+export * from './types.ts';
 
 export default function iteratorNextCallback<T, TReturn = unknown, TNext = unknown>(iterator: AsyncIterator<T, TReturn, TNext> | AsyncIterable<T, TReturn, TNext> | AsyncIterableIterator<T, TReturn, TNext>): IteratorCallback<T> {
   if (typeof Symbol !== 'undefined' && Symbol.asyncIterator && iterator[Symbol.asyncIterator]) {
