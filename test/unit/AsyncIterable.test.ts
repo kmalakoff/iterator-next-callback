@@ -3,6 +3,10 @@ import assert from 'assert';
 import nextCallback from 'iterator-next-callback';
 import Pinkie from 'pinkie-promise';
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: Legacy
+const Symbol: SymbolConstructor = typeof global.Symbol === 'undefined' ? ({ asyncIterator: undefined } as unknown as SymbolConstructor) : global.Symbol;
+const hasAsyncIterable = typeof Symbol !== 'undefined' && Symbol.asyncIterator !== undefined;
+
 class Iterator<T> implements AsyncIterable<T> {
   values: T[];
 
@@ -21,7 +25,8 @@ class Iterator<T> implements AsyncIterable<T> {
 }
 
 describe('asyncIterator', () => {
-  if (typeof Symbol === 'undefined' || !Symbol.asyncIterator) return;
+  if (!hasAsyncIterable) return;
+
   (() => {
     // patch and restore promise
     if (typeof global === 'undefined') return;
