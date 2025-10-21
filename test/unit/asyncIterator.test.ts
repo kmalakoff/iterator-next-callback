@@ -1,5 +1,4 @@
 import assert from 'assert';
-// @ts-ignore
 import nextCallback from 'iterator-next-callback';
 import Pinkie from 'pinkie-promise';
 
