@@ -1,1 +1,1 @@
-ignores: ["node-version-use", "ts-dev-stack", "@biomejs/biome", "iterator-next-callback"]
+ignores: ["node-version-use", "ts-dev-stack", "iterator-next-callback"]
