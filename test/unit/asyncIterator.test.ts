@@ -47,7 +47,7 @@ describe('promise', () => {
       })
       .catch((err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
