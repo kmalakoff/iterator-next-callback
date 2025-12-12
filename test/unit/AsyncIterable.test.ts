@@ -57,7 +57,7 @@ describe('asyncIterator', () => {
       })
       .catch((err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
@@ -104,7 +104,7 @@ describe('asyncIterator', () => {
       })
       .catch((err) => {
         if (err) {
-          done(err.message);
+          done(err);
           return;
         }
       });
