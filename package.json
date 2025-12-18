@@ -39,7 +39,7 @@
     "version": "tsds version"
   },
   "dependencies": {
-    "is-promise": ">=1.0.0"
+    "is-promise": "^4.0.0"
   },
   "devDependencies": {
     "@types/mocha": "*",
