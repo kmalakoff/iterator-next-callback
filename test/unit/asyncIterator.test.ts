@@ -8,9 +8,9 @@ class Iterator<T> implements AsyncIterator<T> {
   constructor(values: T[]) {
     this.values = values;
   }
-  next() {
-    return new Pinkie((resolve) => {
-      return resolve(this.values.length ? { done: false, value: this.values.shift() } : { done: true, value: null });
+  next(): Promise<IteratorResult<T>> {
+    return new Pinkie((resolve: (value: IteratorResult<T>) => void) => {
+      return resolve(this.values.length ? { done: false, value: this.values.shift() as T } : { done: true, value: undefined as unknown as T });
     });
   }
 }
@@ -34,22 +34,19 @@ describe('promise', () => {
 
     iterator
       .next()
-      .then((result) => {
+      .then((result: IteratorResult<number>) => {
         assert.equal(result.done, false);
         assert.equal(result.value, 1);
 
         iteratorCallback((err1, result) => {
-          assert.ok(!err1);
+          if (err1 || !result) return done(err1 ?? new Error('No result'));
           assert.equal(result.done, false);
           assert.equal(result.value, 2);
           done();
         });
       })
-      .catch((err) => {
-        if (err) {
-          done(err);
-          return;
-        }
+      .catch((err: Error) => {
+        if (err) return done(err);
       });
   });
 });
