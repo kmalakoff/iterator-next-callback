@@ -2,8 +2,12 @@
 
 Calls async iterator next using a callback format.
 
+```sh
+npm install iterator-next-callback
 ```
-var next = require('iterator-next-callback');
+
+```js
+var nextCallback = require('iterator-next-callback');
 var assert = require('assert');
 
 async function* createAsyncIterable(iterable) {
@@ -13,10 +17,11 @@ async function* createAsyncIterable(iterable) {
 }
 
 var iterator = createAsyncIterable([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-var callback = nextCallback(iterator);
+var next = nextCallback(iterator);
 
-callback(function (err, value) {
-  assert.equal(value, 1);
+next(function (err, result) {
+  if (err) throw err;
+  assert.equal(result.value, 1);
 });
 
 ```
